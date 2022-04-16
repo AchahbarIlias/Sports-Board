@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/head::head (title='bus.search')">
+</head>
+<body>
+<header th:replace="fragments/header :: header (current='search-bus')"></header>
+<main>
+<div class="container-lg p-2">
+
+    <h1 class="display-6" th:text="#{bus.search}"></h1>
+
+    <div th:if="${emptyAlert}!=null" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <span th:text="#{${emptyAlert}}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="pb-2" id="searchByDepartureLocation">
+        <div class="card mb-8 box-shadow" >
+            <h3 class="card-header" th:text="#{searchbus.departureLocation.title}"></h3>
+            <div class="card-body">
+                <ul class="text-danger" th:each="error : ${departureError}">
+                    <li th:text="#{${error}}" ></li>
+                </ul>
+                <form class="row mb-3 gx-3 gy-2 align-items-center" th:method="post" th:action="@{/bus/showBusesWithDepartureLocation}" modelAttribute="showBusesWithDepartureLocation">
+                    <div class="col-sm-3">
+                        <input th:id="departureLocation"  th:placeholder="#{busesWithDepartureLocation.departureLocation.label}"  th:name="departureLocation" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="submit"  th:value="#{search.label}"  class="btn btn-primary">
+                    </div>
+                </form>
+
+                <table th:if="${busesWithDepartureLocation}!=null" class="table table-striped table-responsive-lg">
+                    <thead>
+                        <tr>
+                            <th th:text="#{bus.email.label}"></th>
+                            <th th:text="#{bus.seats.label}"></th>
+                            <th th:text="#{bus.departureLocation.label}"></th>
+                            <th th:text="#{bus.name.label}"></th>
+                            <th sec:authorize="hasRole('ADMIN')" th:text="#{bus.update.label}"></th>
+                            <th sec:authorize="hasRole('ADMIN')" th:text="#{bus.delete.label}"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="bus : ${busesWithDepartureLocation}">
+                            <td th:text="${bus.email}"></td>
+                            <td th:text="${bus.seats}"></td>
+                            <td th:text="${bus.departureLocation}"></td>
+                            <td th:text="${bus.name}"></td>
+                            <td sec:authorize="hasRole('ADMIN')" ><a sec:authorize="hasRole('ADMIN')" th:href="@{/bus/update/{id}(id=${bus.id})}" class="btn btn-primary">Update</a></td>
+                            <td sec:authorize="hasRole('ADMIN')" ><a th:href="@{/bus/delete/{id}(id=${bus.id})}" class="btn btn-primary">Delete</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+
+    <div class="pb-2" id="searchByMinMaxSeats">
+    <div class="card mb-8 box-shadow" >
+        <h3 class="card-header" th:text="#{searchbus.minmaxSeats.title}"></h3>
+        <div class="card-body">
+            <ul class="text-danger" th:each="error : ${seatsError}">
+                <li th:text="#{${error}}" ></li>
+            </ul>
+            <form class="row mb-3 gx-3 gy-2 align-items-center" th:action="@{/bus/showBusesWithNumberOfSeatsBetween}" th:method="post" modelAttribute="showBusesWithNumberOfSeatsBetween">
+                <div class="col-sm-3">
+                    <input th:id="minSeats"  th:name="minSeats"  th:placeholder="#{busesWithSeatsBetween.minSeats.label}" type="number" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <input th:id="maxSeats"  th:name="maxSeats"  th:placeholder="#{busesWithSeatsBetween.maxSeats.label}" type="number" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <input type="submit" th:value="#{search.label}" class="btn btn-primary">
+                </div>
+            </form>
+
+            <table th:if="${busesWithNumberOfSeatsBetween}!=null"   class="table table-striped table-responsive-lg">
+                <thead>
+                    <tr>
+                        <th th:text="#{bus.email.label}"></th>
+                        <th th:text="#{bus.seats.label}"></th>
+                        <th th:text="#{bus.departureLocation.label}"></th>
+                        <th th:text="#{bus.name.label}"></th>
+                        <th th:text="#{bus.update.label}"></th>
+                        <th th:text="#{bus.delete.label}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bus : ${busesWithNumberOfSeatsBetween}">
+                        <td th:text="${bus.email}"></td>
+                        <td th:text="${bus.seats}"></td>
+                        <td th:text="${bus.departureLocation}"></td>
+                        <td th:text="${bus.name}"></td>
+                        <td><a th:href="@{/bus/update/{id}(id=${bus.id})}" class="btn btn-primary">Update</a></td>
+                        <td><a th:href="@{/bus/delete/{id}(id=${bus.id})}" class="btn btn-primary">Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="pb-2" id="searchBySeatsAbove">
+    <div class="card mb-8 box-shadow">
+        <h3 class="card-header" th:text="#{searchbus.seatsAbove.title}"></h3>
+        <div class="card-body">
+            <ul class="text-danger" th:each="error : ${seatsAboveError}">
+                <li th:text="#{${error}}" ></li>
+            </ul>
+            <form class="row mb-3 gx-3 gy-2 align-items-center" th:method="post" th:action="@{/bus/showBusesWithSeatsAbove}" modelAttribute="showBusesWithDepartureLocation">
+                <div class="col-sm-3">
+                    <input th:id="seatsAbove"  th:name="seatsAbove" th:placeholder="#{busesWithSeatsAbove.seats.label}" type="number" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <input type="submit"  th:value="#{search.label}"  class="btn btn-primary">
+                </div>
+            </form>
+
+            <table th:if="${busesWithSeatsAbove}!=null" class="table table-striped table-responsive-lg">
+                <thead>
+                    <tr>
+                        <th th:text="#{bus.email.label}"></th>
+                        <th th:text="#{bus.seats.label}"></th>
+                        <th th:text="#{bus.departureLocation.label}"></th>
+                        <th th:text="#{bus.name.label}"></th>
+                        <th th:text="#{bus.update.label}"></th>
+                        <th th:text="#{bus.delete.label}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bus : ${busesWithSeatsAbove}">
+                        <td th:text="${bus.email}"></td>
+                        <td th:text="${bus.seats}"></td>
+                        <td th:text="${bus.departureLocation}"></td>
+                        <td th:text="${bus.name}"></td>
+                        <td><a th:href="@{/bus/update/{id}(id=${bus.id})}" class="btn btn-primary">Update</a></td>
+                        <td><a th:href="@{/bus/delete/{id}(id=${bus.id})}" class="btn btn-primary">Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+</div>
+</main>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+</body>
+</html>

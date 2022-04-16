@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/head::head (title='team.addPlayer')">
+</head>
+<body>
+<header th:replace="fragments/header :: header (current='add-team-player')"></header>
+<main>
+    <div class="container-lg p-2">
+
+        <h2 class="display-6" th:text="#{team.addPlayer.label}"></h2>
+
+        <div th:if="${confirmationMessage}!=null" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="#{${confirmationMessage}}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}!=null" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="#{${error}}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+
+        <div th:if="${availablePlayers}!=null">
+            <table class="table table-striped table-responsive-lg">
+                <thead>
+                <tr>
+                    <th th:text="#{player.firstname.label}"></th>
+                    <th th:text="#{player.lastname.label}"></th>
+                    <th th:text="#{player.age.label}"></th>
+                    <th sec:authorize="hasRole('ADMIN')" th:text="#{team.addPlayer}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="player : ${availablePlayers}">
+                    <td th:text="${player.firstName}"></td>
+                    <td th:text="${player.lastName}"></td>
+                    <td th:text="${player.age}"></td>
+                    <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/team/add_player/{id}/{playerId}(id=${team.id}, playerId=${player.id})}" th:method="POST" class="btn btn-primary" th:text="#{team.addPlayer.small.label}"></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <a th:href="@{/team/players/{id}(id=${team.id})}" class="btn btn-secondary" th:text="#{team.return.information.label}"></a>
+
+    </div>
+</main><!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+</body>
+</html>

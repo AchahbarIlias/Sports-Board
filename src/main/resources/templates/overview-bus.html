@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/head::head (title='bus.overview')">
+</head>
+<body>
+<header th:replace="fragments/header :: header (current='overview-bus')"></header>
+<main>
+
+    <div class="container-lg p-2">
+
+        <h2 class="display-6" th:each="title : ${overviewTitle}" th:text="#{${title}}" ></h2>
+
+        <div th:if="${confirmationMessage}!=null" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="#{${confirmationMessage}}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${busError}!=null" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="#{${busError}}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${buses.empty}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <span th:text="#{bus.overview.empty}"></span>
+        </div>
+
+        <div th:unless="${buses.empty}">
+            <table class="table table-striped table-responsive-lg">
+                <thead>
+                    <tr>
+                        <th th:text="#{bus.email.label}"></th>
+                        <th sec:authorize="hasRole('ADMIN')" th:text="#{bus.update.label}"></th>
+                        <th sec:authorize="hasRole('ADMIN')" th:text="#{bus.delete.label}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bus : ${buses}">
+                        <td><a th:text="${bus.email}" th:href="@{/bus/matches/{id}(id=${bus.id})}" class="link-info"></a></td>
+                        <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/bus/update/{id}(id=${bus.id})}" class="btn btn-primary" th:text="#{bus.update.label}"></a></td>
+                        <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/bus/delete/{id}(id=${bus.id})}" class="btn btn-primary" th:text="#{bus.delete.label}"></a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="dropdown" style="padding-bottom: 10px;">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-expanded="false" th:text="#{sort.dropdownbox}"></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="/bus/all" th:text="#{bus.sort.default}"></a></li>
+                    <li><a class="dropdown-item" href="/bus/all/namesort" th:text="#{bus.sort.name}"></a></li>
+                    <li><a class="dropdown-item" href="/bus/all/emailsort" th:text="#{bus.sort.email}"></a></li>
+                    <li><a class="dropdown-item" href="/bus/all/seatsort" th:text="#{bus.sort.seats}"></a></li>
+                </ul>
+            </div>
+        </div>
+
+    <!-- Spring Sessions - Ilias Achahbar & Lobke De Roover -->
+        <div th:if="${session.lastShownBus.email}!=null" class="alert alert-info fase show" role="alert">
+            <span th:text="#{last.shown.begin} + ${session.lastShownBus.email} + #{last.shown.end}"></span>
+            <a th:href="@{/bus/matches/{id}(id=${session.lastShownBus.id})}" type="button" class="btn btn-primary" th:text="#{last.shown.btn}"></a>
+        </div>
+
+        <div th:if="${session.lastUpdatedBus.email}!=null" class="alert alert-info fase show" role="alert">
+            <span th:text="#{last.updated.begin} + ${session.lastUpdatedBus.email} + #{last.updated.end}"></span>
+            <a th:href="@{/bus/update/{id}(id=${session.lastUpdatedBus.id})}" type="button" class="btn btn-primary" th:text="#{last.updated.btn}"></a>
+        </div>
+    <!-- Einde Implementaties Spring Sessions - Ilias Achahbar & Lobke De Roover -->
+
+    </div>
+
+</main>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <body>
+        <header th:fragment="header">
+            <div>
+            <nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow">
+                <a href="/" class="navbar-brand p-2" th:text="#{home}"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        <li sec:authorize="isAuthenticated()"  class="nav-item" th:classappend="${current == 'overview-bus' ? 'active' : ''}">
+                            <a class="nav-link" href="/bus/all" th:text="#{bus.overview}"></a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${current =='search-bus' ? 'active' : ''}">
+                            <a class="nav-link" href="/bus/search" th:text="#{bus.search}"></a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')" class="nav-item" th:classappend="${current == 'add-bus' ? 'active' : ''}">
+                            <a class="nav-link" href="/bus/add" th:text="#{bus.add}"></a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${current == 'overview-team' ? 'active' : ''}">
+                            <a class="nav-link" href="/team/all" th:text="#{team.overview}"></a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${current =='search-team' ? 'active' : ''}">
+                            <a class="nav-link" href="/team/search" th:text="#{team.search}"></a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')" class="nav-item" th:classappend="${current == 'add-team' ? 'active' : ''}">
+                            <a class="nav-link" href="/team/add" th:text="#{team.add}"></a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${current == 'user-logout' ? 'active' : ''}">
+                            <a class="nav-link" href="/user_logout" th:text="#{logout.page}"></a>
+                        </li>
+                        <li sec:authorize="!isAuthenticated()" class="nav-item" th:classappend="${current == 'login' ? 'active' : ''}">
+                            <a class="nav-link" href="/login" th:text="#{login.page}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    </body>
+</html>

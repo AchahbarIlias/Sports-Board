@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments/head::head (title='bus.add')">
+</head>
+<body>
+<header th:replace="fragments/header :: header (current='add-bus')"></header>
+<main>
+    <div class="container-lg p-2">
+        <h2 class="display-6" th:text="#{bus.add}"></h2>
+        <form action="#" th:action="@{/bus/add}" method="post" th:object="${bus}">
+            <p class="mb-3">
+                <label th:for="email" class="col-form-label" th:text="#{bus.email.label}"></label>
+                <input type="text" th:field="*{email}"  class="form-control col-sm-5">
+                <span th:each="err : ${#fields.errors('email')}" th:text="#{${err}}" class="text-danger"></span>
+                <span th:if="${busError}!=null" th:text="#{${busError}}" class="text-danger"></span>
+            </p>
+            <p class="mb-3">
+                <label th:for="seats" class="col-form-label" th:text="#{bus.seats.label}"></label>
+                <input type="number" th:field="*{seats}"  class="form-control col-sm-5" required>
+                <span th:each="err : ${#fields.errors('seats')}" th:text="#{${err}}" class="text-danger"></span>
+            </p>
+            <p class="mb-3">
+                <label th:for="departureLocation" class="col-form-label" th:text="#{bus.departureLocation.label}"></label>
+                <input type="text" th:field="*{departureLocation}"  class="form-control col-sm-5">
+                <span th:each="err : ${#fields.errors('departureLocation')}" th:text="#{${err}}" class="text-danger"></span>
+            </p>
+            <p class="mb-3">
+                <label th:for="name" class="col-form-label" th:text="#{bus.name.label}"></label>
+                <input type="text" th:field="*{name}"  class="form-control col-sm-5">
+                <span th:each="err : ${#fields.errors('name')}" th:text="#{${err}}" class="text-danger"></span>
+            </p>
+            <p>
+                <input type="submit" th:value="#{bus.submit}" class="btn btn-primary">
+            </p>
+        </form>
+    </div>
+</main>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+</body>
+</html>

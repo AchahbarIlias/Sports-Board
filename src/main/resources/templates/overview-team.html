@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/head::head (title='team.overview')">
+</head>
+<body>
+<header th:replace="fragments/header :: header (current='overview-team')"></header>
+<main>
+
+    <div class="container-lg p-2">
+
+        <h2 class="display-6" th:each="title : ${overviewTitle}" th:text="#{${title}}" ></h2>
+
+        <div th:if="${confirmationMessage}!=null" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="#{${confirmationMessage}}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${teamError}!=null" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="#{${teamError}}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${teams.empty}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <span th:text="#{team.overview.empty}"></span>
+        </div>
+
+
+        <div th:unless="${teams.empty}">
+            <table class="table table-striped table-responsive-lg">
+                    <thead>
+                        <tr>
+                            <th th:text="#{team.name.label}"></th>
+                            <th sec:authorize="hasRole('ADMIN')" th:text="#{team.update.label}"></th>
+                            <th sec:authorize="hasRole('ADMIN')" th:text="#{team.delete.label}"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="team : ${teams}">
+                            <td><a th:text="${team.name}" th:href="@{/team/players/{id}(id=${team.id})}" class="link-info"></a></td>
+                            <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/team/update/{id}(id=${team.id})}" class="btn btn-primary" th:text="#{team.update.label}"></a></td>
+                            <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/team/delete/{id}(id=${team.id})}" class="btn btn-primary" th:text="#{team.delete.label}"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="dropdown" style="padding-bottom: 10px;">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-expanded="false" th:text="#{sort.dropdownbox}"></button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/team/all" th:text="#{team.sort.default}"></a></li>
+                        <li><a class="dropdown-item" href="/team/all/namesort" th:text="#{team.sort.name}"></a></li>
+                        <li><a class="dropdown-item" href="/team/all/playersort" th:text="#{team.sort.player}"></a></li>
+                    </ul>
+                </div>
+
+        <!-- Spring Sessions - Ilias Achahbar & Lobke De Roover -->
+            <div th:if="${session.lastShownTeam.name}!=null" class="alert alert-info fase show" role="alert">
+                <span th:text="#{last.shown.begin} + ${session.lastShownTeam.name} + #{last.shown.end} + '  '"></span>
+                <a th:href="@{/team/players/{id}(id=${session.lastShownTeam.id})}" type="button" class="btn btn-primary" th:text="#{last.shown.btn}"></a>
+            </div>
+
+            <div th:if="${session.lastUpdatedTeam.name}!=null" class="alert alert-info fase show" role="alert">
+                <span th:text="#{last.updated.begin} + ${session.lastUpdatedTeam.name} + #{last.updated.end} + '  '"></span>
+                <a th:href="@{/team/update/{id}(id=${session.lastUpdatedTeam.id})}" type="button" class="btn btn-primary" th:text="#{last.updated.btn}"></a>
+            </div>
+        <!-- Einde Implementaties Spring Sessions - Ilias Achahbar & Lobke De Roover -->
+
+        </div>
+    </div>
+</main>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+</body>
+</html>
